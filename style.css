@@ -4,12 +4,26 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: Georgia, 'Times New Roman', Times, serif;
+    scrollbar-width: thin;
+    scrollbar-color: #888888 #dddddd;
+
+}
+
+body::-webkit-scrollbar {
+    width: 15px;
+}
+
+body::-webkit-scrollbar-track {
+    background-color: #dddddd;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #888888;
 }
 
 #pokedex {
     font-size: 1.2rem;
     min-height: 100vh;
-    background-color: red;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,28 +39,18 @@ body {
     align-items: center;
 }
 
-.navigation img {
+.navImg {
     width: 500px;
     margin-bottom: 2rem;
 }
 
-#serachPokemon {
+#searchPokemon {
     width: 300px;
     height: 40px;
-    border: 2px solid black;
+    border: 2px solid rgb(50, 84, 202);
     border-radius: 5px;
     font-size: 26px;
     padding-left: 1rem;
-}
-
-.pokedexContainer {
-    width: 300px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: white;
 }
 
 .pokedexContainer img {
@@ -58,14 +62,13 @@ body {
 }
 
 .pokedex {
-    height: 100vh;
     display: flex;
     margin-left: auto;
     margin-right: auto;
 }
 
 #pokemonContainer img {
-    width: 150px;
+    width: 80%;
     height: 150px;
     object-fit: contain;
 }
@@ -73,45 +76,145 @@ body {
 #pokemonContainer {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 .pokemonCard {
     width: 230px;
-    height: 300px;
+    height: 330px;
     margin: 1rem;
     border-radius: 10px;
     color: white;
+    background-color: blue;
 }
 
 h3 {
     margin-top: .5rem;
-}
-
-#searchedPokemon {
-    height: 100%;
-    z-index: 3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.2);
-    display: none;
+    margin-left: .3rem;
+    margin-right: .3rem;
 }
 
 .currentPokemonContainer {
     border-radius: 10px;
     background-color: lightgray;
     z-index: 5;
-    width: 300px;
-    height: 400px;
+    width: 400px;
+    height: 500px;
+    font-size: 1.2rem;
 }
 
 .currentPokemonContainer img {
+    margin-top: 2rem;
     width: 200px;
     height: 200px;
+    background-color: white;
+    border-radius: 10px;
     object-fit: contain;
+}
+
+
+.clickedPokemonCard h1 {
+    padding-top: 1rem;
+}
+
+.clickedPokemonCard h2 {
+    padding-bottom: 1rem;
+}
+
+.clickedPokemonCard img {
+    width: 400px;
+    height: 400px;
+}
+
+
+
+.clickedPokemonCard {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    margin-top: 10rem;
+    margin-left: 30%;
+    margin-right: 30%;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+
+#searchedPokemon {
+    z-index: 3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+#clickedPokemon {
+    z-index: 3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+
+}
+
+.currentPokemonContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    margin-top: 10rem;
+    margin-left: 30%;
+    margin-right: 30%;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+
+@media screen and (max-width:600px) {
+    .navImg {
+        width: 80%;
+    }
+
+    .pokemonCard {
+        width: 90%;
+        height: 400px;
+        font-size: 1.2rem;
+    }
+
+    #pokemonContainer img {
+        height: 230px;
+    }
+
+    .pokemonCard h3 :nth-child(2) {
+        margin-bottom: 2rem;
+    }
+}
+
+@media screen and (max-width:900px) {
+    #clickedPokemon {
+        position: relative;
+    }
+
+    .currentPokemonContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 }

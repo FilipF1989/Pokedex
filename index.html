@@ -10,16 +10,18 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body onload="loadAllPokemon()">
+<body onload="loadAllPokemonOnLoad()">
     <div class="navigation">
-        <img src="/img/pokemonTitleImg.jpg" alt="">
+        <img src="/img/pokemonTitleImg.jpg" class="navImg" alt="">
         <input type="text" id="searchPokemon" placeholder="Search for Pokemon">
     </div>
     <div class="pokedex">
         <div id="pokemonContainer"></div>
     </div>
  
-  <div id="searchedPokemon"></div>
+  <div id="searchedPokemon"></div> 
+  <div id="clickedPokemon"></div>
+
 
 </body>
 
