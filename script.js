@@ -2,6 +2,7 @@
 let currentPokemon = [];
 let allPokemon = [];
 let userHeight = 50;
+let searchResults = [];
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -70,7 +71,8 @@ async function performSearch() {
 function showSearchedPokemon(name, species, image, weight) {
   let searchedPokemon = document.getElementById('clickedPokemon');
   let backgroundColor = setPokemonBackgroundColor(species);
-  clickedPokemon.style.display = 'block';
+  clickedPokemon.style.visibility = 'visible';
+  clickedPokemon.style.zIndex = '7';
   clickedPokemon.innerHTML = '';
 
   clickedPokemon.innerHTML += `
@@ -83,7 +85,8 @@ function showSearchedPokemon(name, species, image, weight) {
 }
 
 function removeSearcedPokemon() {
-  document.getElementById('clickedPokemon').style.display = 'none';
+  document.getElementById('clickedPokemon').style.visibility = 'hidden';
+  document.getElementById('clickedPokemon').style.zIndex = '-3';
   document.querySelector('.currentPokemonContainer').style.display = 'none';
 }
 
@@ -119,6 +122,7 @@ async function loadAllPokemon(start, end) {
     let order = allPokemon[i]['moves']['order'];
 
     showPokemon(pokemonName, species, pokemonImage, pokemonWeight);
+
   }
 }
 
@@ -139,7 +143,8 @@ function showPokemon(name, species, image, pokemonWeight) {
 function showPokemonData(name, species, image, pokemonWeight) {
   let data = document.getElementById('searchedPokemon');
   let backgroundColor = setPokemonBackgroundColor(species);
-  data.style.display = 'block';
+  data.style.visibility = 'visible';
+  data.style.zIndex = '3';
   data.innerHTML = ``;
 
   data.innerHTML = `
@@ -154,9 +159,37 @@ function showPokemonData(name, species, image, pokemonWeight) {
 }
 
 function removePokemonCard() {
-  document.getElementById('searchedPokemon').data.style.display = 'none';
+  document.getElementById('searchedPokemon').style.visibility = 'hidden';
+  document.getElementById('searchedPokemon').style.zIndex = '-3';
+
   document.querySelector('.clickedPokemonCard').style.display = 'none';
 }
+
+
+window.addEventListener('scroll', () => {
+  let scrollToTopButton = document.getElementById('scrollToTopButton');
+  {
+    if (document.documentElement.scrollTop > 0) {
+      scrollToTopButton.style.display = 'block';
+    } else {
+      scrollToTopButton.style.display = 'none';
+    }
+  }
+})
+
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+
+
+
+
+
+
 
 
 
