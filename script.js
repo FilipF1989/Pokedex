@@ -8,7 +8,6 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-
 function setPokemonBackgroundColor(species) {
   const colorMap = {
     fire: 'red',
@@ -30,7 +29,6 @@ function setPokemonBackgroundColor(species) {
   return colorMap[firstType] || 'lightgray';
 }
 
-
 let searchInput = document.getElementById('searchPokemon');
 searchInput.addEventListener('keypress', function (event) {
   if (event.key === 'Enter') {
@@ -44,43 +42,66 @@ async function performSearch() {
   let searchTerm = searchInput.toLowerCase();
 
 
-  let searchResults = allPokemon.filter(pokemon => {
+  allPokemon.forEach(pokemon => {
     let pokemonName = pokemon['name'].toLowerCase();
-    return pokemonName.includes(searchTerm);
+    if (pokemonName.includes(searchTerm)) {
+      searchResults.push(pokemon);
+    }
   });
 
   if (searchResults.length === 0) {
     let url = `https://pokeapi.co/api/v2/pokemon/${searchTerm}`;
     let response = await fetch(url);
     let pokemonData = await response.json();
-
     searchResults.push(pokemonData);
+
   }
 
-  searchResults.forEach(pokemon => {
-    let pokemonName = pokemon['name'];
-    let species = pokemon['types'][0]['type']['name'];
-    let pokemonImage = pokemon['sprites']['other']['dream_world']['front_default'];
-    let weight = pokemon['weight'];
+  getSearchedData(searchResults);
 
-    showSearchedPokemon(pokemonName, species, pokemonImage, weight);
-  });
+}
+
+function getSearchedData() {
+  for (let i = 0; i < searchResults.length; i++) {
+    let pokemonHP = allPokemon[i]['stats'][0]['base_stat'];
+    let pokemonAttack = allPokemon[i]['stats'][1]['base_stat'];
+    let pokemonDefense = allPokemon[i]['stats'][2]['base_stat'];
+    let pokemonSpecialAttack = allPokemon[i]['stats'][3]['base_stat'];
+    let pokemonSpecialDefense = allPokemon[i]['stats'][4]['base_stat'];
+    let pokemonSpeed = allPokemon[i]['stats'][5]['base_stat'];
+    let pokemonHeight = allPokemon[i]['height'];
+    let pokemonName = allPokemon[i]['name'];
+    let type1 = allPokemon[i]['types'][0]['type']['name'];
+    let type2 = allPokemon[i]['types'][1] ? capitalizeFirstLetter(allPokemon[i]['types'][1]['type']['name']) : null;
+    let species = type2 ? `${type1}, ${type2}` : type1;
+    let pokemonImage = allPokemon[i]['sprites']['other']['dream_world']['front_default'];
+    let pokemonWeight = allPokemon[i]['weight'];
+
+    showSearchedPokemon(pokemonName, species, pokemonImage, pokemonWeight, pokemonHeight, pokemonHP, pokemonAttack, pokemonDefense, pokemonSpecialAttack, pokemonSpecialDefense, pokemonSpeed);
+  };
 }
 
 
-function showSearchedPokemon(name, species, image, weight) {
+function showSearchedPokemon(pokemonName, species, pokemonImage, pokemonWeight, pokemonHeight, pokemonHP, pokemonAttack, pokemonDefense, pokemonSpecialAttack, pokemonSpecialDefense, pokemonSpeed) {
   let searchedPokemon = document.getElementById('clickedPokemon');
   let backgroundColor = setPokemonBackgroundColor(species);
-  clickedPokemon.style.visibility = 'visible';
-  clickedPokemon.style.zIndex = '7';
-  clickedPokemon.innerHTML = '';
+  searchedPokemon.style.visibility = 'visible';
+  searchedPokemon.style.zIndex = '7';
+  searchedPokemon.innerHTML = '';
 
-  clickedPokemon.innerHTML += `
+  searchedPokemon.innerHTML += `
   <div class="currentPokemonContainer" onclick="removeSearcedPokemon()" style="background-color: ${backgroundColor}">
-      <img src=" ${image}" alt="">
-      <h1>${capitalizeFirstLetter(name)}</h1>
-      <h3>Type: ${capitalizeFirstLetter(species)}</h3>  
-      <h3>Weight: ${weight}</h3>  
+     <h1>${capitalizeFirstLetter(pokemonName)} </h1>
+      <img src="${pokemonImage}" alt="">
+      <h3>Type: ${capitalizeFirstLetter(species)}</h3>
+      <h3>Weight: ${pokemonWeight} lb</h3>
+      <h3>Height: ${pokemonHeight} ft</h3>
+       <h3 class="pokemonStats">HP:${pokemonHP} </h3>
+       <h3 class="pokemonStats">ATTACK: ${pokemonAttack}</h3>
+       <h3 class="pokemonStats">DEFENSE: ${pokemonDefense}</h3>
+       <h3 class="pokemonStats">SPECIAL ATTACK: ${pokemonSpecialAttack}</h3>
+       <h3 class="pokemonStats">SPECIAL DEFENSE: ${pokemonSpecialDefense}</h3>
+       <h3 class="pokemonStats">POKEMON SPEED: ${pokemonSpeed}</h3> 
   </div>`;
 }
 
@@ -99,6 +120,9 @@ window.addEventListener('scroll', function () {
   }
 });
 
+
+
+
 function loadAllPokemonOnLoad() {
   const start = 0;
   const end = Math.min(start + 50, 800);
@@ -113,34 +137,45 @@ async function loadAllPokemon(start, end) {
     allPokemon.push(await pokemonAsJSON);
     currentPokemon.push(allPokemon[i]['name']);
 
-    let pokemonName = allPokemon[i]['name'];
-    let type1 = allPokemon[i]['types'][0]['type']['name'];
-    let type2 = allPokemon[i]['types'][1] ? capitalizeFirstLetter(allPokemon[i]['types'][1]['type']['name']) : null;
-    let species = type2 ? `${type1}, ${type2}` : type1;
-    let pokemonImage = allPokemon[i]['sprites']['other']['dream_world']['front_default'];
-    let pokemonWeight = allPokemon[i]['weight'];
-    let order = allPokemon[i]['moves']['order'];
-
-    showPokemon(pokemonName, species, pokemonImage, pokemonWeight);
-
+    readDataFromAPI(i)
   }
 }
 
-function showPokemon(name, species, image, pokemonWeight) {
+async function readDataFromAPI(i) {
+  let pokemonHP = allPokemon[i]['stats'][0]['base_stat'];
+  let pokemonAttack = allPokemon[i]['stats'][1]['base_stat'];
+  let pokemonDefense = allPokemon[i]['stats'][2]['base_stat'];
+  let pokemonSpecialAttack = allPokemon[i]['stats'][3]['base_stat'];
+  let pokemonSpecialDefense = allPokemon[i]['stats'][4]['base_stat'];
+  let pokemonSpeed = allPokemon[i]['stats'][5]['base_stat'];
+  let pokemonHeight = allPokemon[i]['height'];
+  let pokemonName = allPokemon[i]['name'];
+  let type1 = allPokemon[i]['types'][0]['type']['name'];
+  let type2 = allPokemon[i]['types'][1] ? capitalizeFirstLetter(allPokemon[i]['types'][1]['type']['name']) : null;
+  let species = type2 ? `${type1}, ${type2}` : type1;
+  let pokemonImage = allPokemon[i]['sprites']['other']['dream_world']['front_default'];
+  let pokemonWeight = allPokemon[i]['weight'];
+  let order = allPokemon[i]['moves']['order'];
+
+  showPokemon(pokemonName, species, pokemonImage, pokemonWeight, pokemonHeight, pokemonHP, pokemonAttack, pokemonDefense, pokemonSpecialAttack, pokemonSpecialDefense, pokemonSpeed);
+}
+
+function showPokemon(name, species, image, pokemonWeight, pokemonHeight, pokemonHP, pokemonAttack, pokemonDefense, pokemonSpecialAttack, pokemonSpecialDefense, pokemonSpeed) {
   let pokemonContainer = document.getElementById('pokemonContainer');
   let backgroundColor = setPokemonBackgroundColor(species);
 
   pokemonContainer.innerHTML += `
-       <div class="pokemonCard"  onclick="showPokemonData('${name}', '${species}', '${image}', ${pokemonWeight})" " style="background-color: ${backgroundColor}">
+       <div class="pokemonCard"  onclick="showPokemonData('${name}', '${species}', '${image}', ${pokemonWeight}, ${pokemonHeight}, ${pokemonHP}, ${pokemonAttack}, ${pokemonDefense}, ${pokemonSpecialAttack}, ${pokemonSpecialDefense}, ${pokemonSpeed})" " style="background-color: ${backgroundColor}">
             <h2>${capitalizeFirstLetter(name)} </h2>
             <img src="${image}" alt="">
             <h3>Type: ${capitalizeFirstLetter(species)}</h3>
             <h3>Weight: ${pokemonWeight} lb</h3>
+            <h3>Height: ${pokemonHeight} ft</h3>
        </div>     
     `;
 }
 
-function showPokemonData(name, species, image, pokemonWeight) {
+function showPokemonData(name, species, image, pokemonWeight, pokemonHeight, pokemonHP, pokemonAttack, pokemonDefense, pokemonSpecialAttack, pokemonSpecialDefense, pokemonSpeed) {
   let data = document.getElementById('searchedPokemon');
   let backgroundColor = setPokemonBackgroundColor(species);
   data.style.visibility = 'visible';
@@ -153,6 +188,13 @@ function showPokemonData(name, species, image, pokemonWeight) {
        <img src="${image}" alt="">
        <h2>Type: ${capitalizeFirstLetter(species)}</h2>
        <h2>Weight: ${pokemonWeight} lb</h2>
+       <h2>Height: ${pokemonHeight} ft</h2>
+         <h3 class="pokemonStats">HP:${pokemonHP} </h3>
+         <h3 class="pokemonStats">ATTACK: ${pokemonAttack}</h3>
+         <h3 class="pokemonStats">DEFENSE: ${pokemonDefense}</h3>
+         <h3 class="pokemonStats">SPECIAL ATTACK: ${pokemonSpecialAttack}</h3>
+         <h3 class="pokemonStats">SPECIAL DEFENSE: ${pokemonSpecialDefense}</h3>
+         <h3 class="pokemonStats">POKEMON SPEED: ${pokemonSpeed}</h3>
   </div>     
 `;
 
@@ -161,7 +203,6 @@ function showPokemonData(name, species, image, pokemonWeight) {
 function removePokemonCard() {
   document.getElementById('searchedPokemon').style.visibility = 'hidden';
   document.getElementById('searchedPokemon').style.zIndex = '-3';
-
   document.querySelector('.clickedPokemonCard').style.display = 'none';
 }
 
