@@ -96,10 +96,6 @@ body::-webkit-scrollbar-thumb {
     scale: 1.05;
 }
 
-.pokemonCard h3 {
-    margin-top: -5px;
-}
-
 h3 {
     margin-top: .5rem;
     margin-left: .3rem;

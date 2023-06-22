@@ -1,8 +1,10 @@
 
 let currentPokemon = [];
 let allPokemon = [];
+searchResults = [];
+
 let userHeight = 50;
-let searchResults = [];
+
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -42,7 +44,7 @@ async function performSearch() {
   let searchTerm = searchInput.toLowerCase();
 
 
-  allPokemon.forEach(pokemon => {
+  allPokemon.filter(pokemon => {
     let pokemonName = pokemon['name'].toLowerCase();
     if (pokemonName.includes(searchTerm)) {
       searchResults.push(pokemon);
@@ -54,28 +56,26 @@ async function performSearch() {
     let response = await fetch(url);
     let pokemonData = await response.json();
     searchResults.push(pokemonData);
-
   }
 
   getSearchedData(searchResults);
-
 }
 
-function getSearchedData() {
+function getSearchedData(searchResults) {
   for (let i = 0; i < searchResults.length; i++) {
-    let pokemonHP = allPokemon[i]['stats'][0]['base_stat'];
-    let pokemonAttack = allPokemon[i]['stats'][1]['base_stat'];
-    let pokemonDefense = allPokemon[i]['stats'][2]['base_stat'];
-    let pokemonSpecialAttack = allPokemon[i]['stats'][3]['base_stat'];
-    let pokemonSpecialDefense = allPokemon[i]['stats'][4]['base_stat'];
-    let pokemonSpeed = allPokemon[i]['stats'][5]['base_stat'];
-    let pokemonHeight = allPokemon[i]['height'];
-    let pokemonName = allPokemon[i]['name'];
-    let type1 = allPokemon[i]['types'][0]['type']['name'];
-    let type2 = allPokemon[i]['types'][1] ? capitalizeFirstLetter(allPokemon[i]['types'][1]['type']['name']) : null;
+    let pokemonHP = searchResults[i]['stats'][0]['base_stat'];
+    let pokemonAttack = searchResults[i]['stats'][1]['base_stat'];
+    let pokemonDefense = searchResults[i]['stats'][2]['base_stat'];
+    let pokemonSpecialAttack = searchResults[i]['stats'][3]['base_stat'];
+    let pokemonSpecialDefense = searchResults[i]['stats'][4]['base_stat'];
+    let pokemonSpeed = searchResults[i]['stats'][5]['base_stat'];
+    let pokemonHeight = searchResults[i]['height'];
+    let pokemonName = searchResults[i]['name'];
+    let type1 = searchResults[i]['types'][0]['type']['name'];
+    let type2 = searchResults[i]['types'][1] ? capitalizeFirstLetter(allPokemon[i]['types'][1]['type']['name']) : null;
     let species = type2 ? `${type1}, ${type2}` : type1;
-    let pokemonImage = allPokemon[i]['sprites']['other']['dream_world']['front_default'];
-    let pokemonWeight = allPokemon[i]['weight'];
+    let pokemonImage = searchResults[i]['sprites']['other']['dream_world']['front_default'];
+    let pokemonWeight = searchResults[i]['weight'];
 
     showSearchedPokemon(pokemonName, species, pokemonImage, pokemonWeight, pokemonHeight, pokemonHP, pokemonAttack, pokemonDefense, pokemonSpecialAttack, pokemonSpecialDefense, pokemonSpeed);
   };
@@ -115,7 +115,7 @@ function removeSearcedPokemon() {
 window.addEventListener('scroll', function () {
   if ((document.documentElement.scrollHeight - window.innerHeight) === Math.ceil(window.scrollY)) {
     const start = allPokemon.length;
-    const end = Math.min(start + 15, 800);
+    const end = Math.min(start + 7, 800);
     loadAllPokemon(start, end);
   }
 });
